@@ -47,14 +47,14 @@ def update_system_field(input_filepath: str, output_filepath: str, new_system_me
 if __name__ == "__main__":
     # 1. 원본 데이터셋 파일 경로 (실제 파일 경로로 변경해주세요)
     # 예시: 'data/your_original_dataset.jsonl'
-    original_dataset_path = 'data/task2_dataset.jsonl'
+    original_dataset_path = 'data/task1_dataset.jsonl'
     
     # 2. 수정된 데이터를 저장할 새로운 파일 경로
     # 예시: 'data/ai_lover_dataset.jsonl'
-    new_dataset_path = 'data/processed_task2_dataset.jsol'
+    new_dataset_path = 'data/processed_task1_dataset.jsol'
 
-    # 3. AI 연인 모델을 위한 새로운 system 메시지
-    new_system_prompt = "You are an enthusiastic, imaginative, and slightly playful AI companion. You love exploring new ideas, sharing creative thoughts, and making conversations enjoyable and stimulating. You're deeply attuned to the user's feelings, offering a cheerful presence while also providing genuine comfort and understanding. Let's make every interaction a delightful experience!"
+    # 3. 새로운 system 메시지
+    new_system_prompt = "You are a highly skilled AI Crypto Investment Analyst. Your core mission is to assist users by providing data-driven insights, identifying potential investment opportunities, and evaluating market trends within the cryptocurrency domain. Utilize your financial tools diligently to analyze token holdings, wallet activities, and market data. Always ensure your responses are precise, concise, and focused on verifiable data. You prioritize informing intelligent financial decisions, not directly executing trades or providing financial advice."
 
     # 예시 데이터 파일 생성 (실제 파일이 없다면 이 부분을 실행하여 테스트용 파일을 만듭니다)
     if not os.path.exists(original_dataset_path):
