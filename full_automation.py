@@ -83,9 +83,9 @@ if __name__ == "__main__":
             logger.info(f"Commit hash: {commit_hash}")
             logger.info(f"Repo name: {repo_name}")
             #submit
-            # submit_task(
-            #     task_id, repo_name, model2base_model[model_id], gpu_type, commit_hash
-            # )
+            submit_task(
+                task_id, repo_name, model2base_model[model_id], gpu_type, commit_hash
+            )
             logger.info("Task submitted successfully")
         except Exception as e:
             logger.error(f"Error: {e}")
