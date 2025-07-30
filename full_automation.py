@@ -25,7 +25,7 @@ if __name__ == "__main__":
     # log the task info
     logger.info(json.dumps(task, indent=4))
     # download data from a presigned url
-    data_url = task["data"]["training_set_url"]
+    # data_url = task["data"]["training_set_url"]
     context_length = task["data"]["context_length"]
     max_params = task["data"]["max_params"]
 
@@ -34,10 +34,10 @@ if __name__ == "__main__":
     all_training_args = {k: v for k, v in all_training_args.items() if k in model2size}
     logger.info(f"Models within the max_params: {all_training_args.keys()}")
     # download in chunks
-    response = requests.get(data_url, stream=True)
-    with open("data/demo_data.jsonl", "wb") as f:
-        for chunk in response.iter_content(chunk_size=8192):
-            f.write(chunk)
+    # response = requests.get(data_url, stream=True)
+    # with open("data/processed_task2_dataset.jsonl", "wb") as f:
+    #     for chunk in response.iter_content(chunk_size=8192):
+    #         f.write(chunk)
 
     # train all feasible models and merge
     for model_id in all_training_args.keys():
@@ -82,10 +82,10 @@ if __name__ == "__main__":
             commit_hash = commit_message.oid
             logger.info(f"Commit hash: {commit_hash}")
             logger.info(f"Repo name: {repo_name}")
-            # submit
-            submit_task(
-                task_id, repo_name, model2base_model[model_id], gpu_type, commit_hash
-            )
+            #submit
+            # submit_task(
+            #     task_id, repo_name, model2base_model[model_id], gpu_type, commit_hash
+            # )
             logger.info("Task submitted successfully")
         except Exception as e:
             logger.error(f"Error: {e}")
