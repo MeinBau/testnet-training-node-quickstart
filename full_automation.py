@@ -31,8 +31,8 @@ if __name__ == "__main__":
 
     # # filter out the model within the max_params
     # model2size = {k: v for k, v in model2size.items() if v <= max_params}
-    # all_training_args = {k: v for k, v in all_training_args.items() if k in model2size}
-    # logger.info(f"Models within the max_params: {all_training_args.keys()}")
+    all_training_args = {k: v for k, v in all_training_args.items() if k in model2size}
+    logger.info(f"Models within the max_params: {all_training_args.keys()}")
     # download in chunks
     # response = requests.get(data_url, stream=True)
     # with open("data/processed_task2_dataset.jsonl", "wb") as f:
