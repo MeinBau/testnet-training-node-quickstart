@@ -40,7 +40,7 @@ if __name__ == "__main__":
     #         f.write(chunk)
 
     # train all feasible models and merge
-    model_set=["Qwen/Qwen2.5-7B-Instruct"]
+    model_set=["Qwen/Qwen2.5-3B"]
     training_args=LoraTrainingArguments(
         num_train_epochs=3,
         per_device_train_batch_size=1,
