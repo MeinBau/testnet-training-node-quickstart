@@ -4,7 +4,7 @@ import os
 
 sub_model_id = "Qwen/Qwen2.5-0.5B"  
 device = "cuda" if torch.cuda.is_available() else "cpu"
-
+print("검사")
 sub_tokenizer = AutoTokenizer.from_pretrained(
         sub_model_id,
         use_fast=True,
