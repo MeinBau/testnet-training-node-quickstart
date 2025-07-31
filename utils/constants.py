@@ -27,11 +27,11 @@ model2template = {
 }
 
 model2size = {
-    "Qwen/Qwen2.5-7B-Instruct": "7_620_000_000",
-    "Qwen/Qwen2.5-3B-Instruct": "3_090_000_000",
-    "Qwen/Qwen1.5-0.5B": "620_000_000",
-    "Qwen/Qwen1.5-1.8B": "1_840_000_000",
-    "Qwen/Qwen1.5-7B": "7_720_000_000",
+    "Qwen/Qwen2.5-7B-Instruct": 7_620_000_000,
+    "Qwen/Qwen2.5-3B-Instruct": 3_090_000_000,
+    "Qwen/Qwen1.5-0.5B": 620_000_000,
+    "Qwen/Qwen1.5-1.8B": 1_840_000_000,
+    "Qwen/Qwen1.5-7B": 7_720_000_000,
 }
 
 model2base_model = {
