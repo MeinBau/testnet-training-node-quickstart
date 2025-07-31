@@ -15,7 +15,7 @@ gemma_template = {
     "tool_format": "{content}",
     "function_format": "{content}",
     "observation_format": "<start_of_turn>tool\n{content}<end_of_turn>\n<start_of_turn>model\n",
-    "system": "None",
+    "system": None,
 }
 
 model2template = {
