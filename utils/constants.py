@@ -32,6 +32,7 @@ model2template = {
     "Qwen/Qwen2.5-7B-Instruct": qwen_template,
     "google/gemma-2b": gemma_template,
     "google/gemma-7b": gemma_template,
+    
 }
 
 model2size = {
