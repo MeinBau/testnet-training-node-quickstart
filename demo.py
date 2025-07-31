@@ -61,7 +61,7 @@ def train_lora(
     )
 
     tokenizer.padding_side = "right"
-    
+
     model = AutoModelForCausalLM.from_pretrained(
         model_id,
         quantization_config=bnb_config,
@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
 
     # Set model ID and context length
-    model_id = "Qwen/Qwen2.5-7B-Instruct"
+    model_id = "Qwen/Qwen2.5-3B"
     context_length = 2048
 
     # best_params = tuner.run()
