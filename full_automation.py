@@ -49,8 +49,10 @@ if __name__ == "__main__":
     #     lora_alpha=16,
     #     lora_dropout=0.05,
     # )
+    ban_model_id_set= ['Qwen/Qwen1.5-0.5B']
     for model_id in all_training_args.keys():
         logger.info(f"Start to train the model {model_id}...")
+        if (model_id in ban_model_id_set) : continue
         # if OOM, proceed to the next model
         try:
             train_lora(
