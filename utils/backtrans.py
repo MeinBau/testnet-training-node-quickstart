@@ -21,7 +21,7 @@ def back_translate(text: str, source: str, target: str) -> str:
         print(f"번역 오류 발생: {e}")
         return text
 
-def process_jsonl(INPUT_FILE, OUTPUT_FILE, SOURCE_LANGUAGE='en', TARGET_LANGUAGE='ko'):
+def backtrans_process_jsonl(INPUT_FILE, OUTPUT_FILE, SOURCE_LANGUAGE='en', TARGET_LANGUAGE='ko'):
     """
     JSONL 파일을 읽고, 각 라인을 백트랜슬레이션하여 새 파일에 저장합니다.
     """
