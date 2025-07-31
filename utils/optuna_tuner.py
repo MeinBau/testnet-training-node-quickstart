@@ -21,8 +21,8 @@ class OptunaLoraTuner:
 
     def objective(self, trial):
         params = {
-            "lora_rank": trial.suggest_int("lora_rank", 8, 64),
-            "lora_alpha": trial.suggest_int("lora_alpha", 8, 64),
+            "lora_rank": trial.suggest_int("lora_rank", 8, 32),
+            "lora_alpha": trial.suggest_int("lora_alpha", 8, 32),
             "lora_dropout": trial.suggest_float("lora_dropout", 0.0, 0.2),
             "learning_rate": trial.suggest_float("learning_rate", 1e-5, 5e-4, log=True)
         }
