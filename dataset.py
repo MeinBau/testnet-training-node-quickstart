@@ -159,45 +159,82 @@ class TextDatasetProcessor:
         """
         주어진 텍스트 파일을 읽어와 학습 샘플 리스트로 반환합니다.
         각 샘플은 SFTDataCollator가 기대하는 "input_ids", "attention_mask", "labels", "target_mask"를 포함합니다.
+        긴 텍스트 파일 처리를 위해 줄 단위로 읽어와 max_seq_length에 맞춰 토큰화합니다.
         """
         processed_samples = []
+        
         with open(file_path, 'r', encoding='utf-8') as f:
-            full_text = f.read() # 파일 전체를 하나의 긴 텍스트로 읽어옴
+            current_chunk_tokens = [] # 현재 처리 중인 토큰들을 저장할 리스트
 
-        # 전체 텍스트를 토큰화합니다.
-        tokenized_full_text = self.tokenizer(
-            full_text,
-            truncation=False, # 전체 텍스트를 토큰화하므로 truncation=False
-            return_attention_mask=False # 나중에 수동으로 생성
-        )["input_ids"]
+            for line in f:
+                # 각 줄을 토큰화 (trim_off_token_ids를 추가하여 특정 토큰 제거 가능)
+                # max_length를 명시하고 truncation=True로 설정하여 모델의 최대 길이를 초과하지 않도록 합니다.
+                # 이는 이전에 발생한 (2041731 > 32768) 경고를 해결하는 핵심입니다.
+                tokenized_line = self.tokenizer(
+                    line.strip(), # 줄 끝 공백 제거
+                    max_length=self.max_seq_length, # 토크나이저 자체에서 최대 길이 적용
+                    truncation=True, # 최대 길이를 초과하면 자름
+                    return_attention_mask=False,
+                    add_special_tokens=True # 각 샘플에 [CLS], [SEP] 등 추가 (모델에 따라 다름)
+                )["input_ids"]
 
-        # max_seq_length에 맞춰 슬라이딩 윈도우 방식으로 샘플 생성
-        # 긴 텍스트를 끊임없이 이어 붙이는 아이디어를 여기서 구현
-        for i in range(0, len(tokenized_full_text), self.max_seq_length - self.overlap_length):
-            chunk = tokenized_full_text[i : i + self.max_seq_length]
+                # 빈 줄이거나 토큰화 결과가 없는 경우 건너뜁니다.
+                if not tokenized_line:
+                    continue
+                
+                # 토큰화된 줄을 current_chunk_tokens에 추가
+                current_chunk_tokens.extend(tokenized_line)
 
-            # 청크가 너무 짧으면 건너뛰기 (선택 사항, 패딩으로 채울 수도 있음)
-            if len(chunk) < 50: # 최소 길이 설정
-                continue
+                # current_chunk_tokens가 max_seq_length 이상이 되면 샘플을 생성
+                while len(current_chunk_tokens) >= self.max_seq_length:
+                    chunk = current_chunk_tokens[:self.max_seq_length]
+                    
+                    # 최소 길이 설정 (기존 로직 유지)
+                    if len(chunk) < 50:
+                        # 짧은 청크는 버리고, 남은 토큰들을 다음 샘플에 포함
+                        current_chunk_tokens = current_chunk_tokens[self.max_seq_length:]
+                        continue # 다음 while 루프를 바로 실행하여 다음 청크를 검사
 
-            # 패딩 처리
-            input_ids = list(chunk) # 텐서로 변환하기 전에 리스트로 명시적으로 복사
-            attention_mask = [1] * len(input_ids)
+                    input_ids = list(chunk)
+                    attention_mask = [1] * len(input_ids)
 
-            # Causal LM의 경우, 'labels'는 일반적으로 'input_ids'와 동일합니다.
-            # 모델 내부에서 이를 시프트하여 다음 토큰 예측에 사용합니다.
-            labels = list(chunk) # input_ids와 동일하게 설정
+                    # Causal LM의 경우, 'labels'는 일반적으로 'input_ids'와 동일합니다.
+                    # 모델 내부에서 이를 시프트하여 다음 토큰 예측에 사용합니다.
+                    labels = list(chunk)
 
-            # 'target_mask'는 손실 계산에 포함할 토큰을 지정합니다.
-            # Causal LM에서는 일반적으로 모든 토큰에 대해 손실을 계산합니다.
-            target_mask = [1] * len(input_ids)
+                    # 'target_mask'는 손실 계산에 포함할 토큰을 지정합니다.
+                    # Causal LM에서는 일반적으로 모든 토큰에 대해 손실을 계산합니다.
+                    target_mask = [1] * len(input_ids)
 
-            processed_samples.append({
-                "input_ids": input_ids,
-                "attention_mask": attention_mask,
-                "labels": labels,          # 추가된 부분: 레이블 데이터
-                "target_mask": target_mask,
-            })
+                    processed_samples.append({
+                        "input_ids": input_ids,
+                        "attention_mask": attention_mask,
+                        "labels": labels,
+                        "target_mask": target_mask,
+                    })
+                    
+                    # 처리된 청크만큼 current_chunk_tokens에서 제거 (overlap_length 고려)
+                    current_chunk_tokens = current_chunk_tokens[self.max_seq_length - self.overlap_length:]
+
+            # 파일의 마지막에 남아있는 토큰들 처리 (남은 토큰이 최소 길이 이상일 경우)
+            if len(current_chunk_tokens) >= 50: # 최소 길이 설정
+                # 남은 토큰들을 max_seq_length에 맞게 패딩하거나 자릅니다.
+                # SFTDataCollator가 패딩을 처리할 것이므로, 여기서는 단순히 포함시킵니다.
+                # 필요하다면 여기에 패딩 로직을 추가할 수도 있습니다.
+                final_chunk = current_chunk_tokens[:self.max_seq_length] # 너무 길면 자름 (안전장치)
+                
+                input_ids = list(final_chunk)
+                attention_mask = [1] * len(input_ids)
+                labels = list(final_chunk)
+                target_mask = [1] * len(input_ids)
+                
+                processed_samples.append({
+                    "input_ids": input_ids,
+                    "attention_mask": attention_mask,
+                    "labels": labels,
+                    "target_mask": target_mask,
+                })
+
         return processed_samples
 
 
