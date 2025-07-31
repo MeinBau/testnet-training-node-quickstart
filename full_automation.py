@@ -29,10 +29,10 @@ if __name__ == "__main__":
     context_length = task["data"]["context_length"]
     max_params = task["data"]["max_params"]
 
-    # filter out the model within the max_params
-    model2size = {k: v for k, v in model2size.items() if v <= max_params}
-    all_training_args = {k: v for k, v in all_training_args.items() if k in model2size}
-    logger.info(f"Models within the max_params: {all_training_args.keys()}")
+    # # filter out the model within the max_params
+    # model2size = {k: v for k, v in model2size.items() if v <= max_params}
+    # all_training_args = {k: v for k, v in all_training_args.items() if k in model2size}
+    # logger.info(f"Models within the max_params: {all_training_args.keys()}")
     # download in chunks
     # response = requests.get(data_url, stream=True)
     # with open("data/processed_task2_dataset.jsonl", "wb") as f:
@@ -40,7 +40,8 @@ if __name__ == "__main__":
     #         f.write(chunk)
 
     # train all feasible models and merge
-    for model_id in all_training_args.keys():
+    model_set=["Qwen/Qwen2.5-7B-Instruct"]
+    for model_id in model_set:
         logger.info(f"Start to train the model {model_id}...")
         # if OOM, proceed to the next model
         try:
@@ -82,18 +83,17 @@ if __name__ == "__main__":
             commit_hash = commit_message.oid
             logger.info(f"Commit hash: {commit_hash}")
             logger.info(f"Repo name: {repo_name}")
-            #submit
-            # submit_task(
-            #     task_id, repo_name, model2base_model[model_id], gpu_type, commit_hash
-            # )
-            # logger.info("Task submitted successfully")
+            # submit
+            submit_task(
+                task_id, repo_name, model2base_model[model_id], gpu_type, commit_hash
+            )
+            logger.info("Task submitted successfully")
             
         except Exception as e:
             logger.error(f"Error: {e}")
             logger.info("Proceed to the next model...")
         finally:
             # cleanup merged_model and output
-            logger.info(f"Models within the max_params: {all_training_args.keys()}")
             os.system("rm -rf merged_model")
             os.system("rm -rf outputs")
             continue
