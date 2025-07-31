@@ -105,7 +105,7 @@ def optuna_train_wrapper(params):
         lora_rank=params["lora_rank"],
         lora_alpha=params["lora_alpha"],
         lora_dropout=params["lora_dropout"],
-        learning_rate=params["learning_rate"],
+        learning_rate=params["learning_rate"], #optuna 문제로 추가
     )
     return train_lora(model_id=model_id, context_length=context_length, training_args=args)
 
@@ -129,7 +129,7 @@ if __name__ == "__main__":
 
 
     # Set model ID and context length
-    model_id = "Qwen/Qwen2-7B-Instruct"
+    model_id = "Qwen/Qwen2.5-7B-Instruct"
     context_length = 2048
 
     best_params = tuner.run()
