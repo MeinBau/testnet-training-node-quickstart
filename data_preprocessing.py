@@ -3,7 +3,7 @@ import os
 
 from utils.backtrans import backtrans_process_jsonl
 
-def update_system_field(input_filepath: str, output_filepath: str, new_system_message: str):
+def data_processing(input_filepath: str, output_filepath: str, new_system_message: str):
     """
     각 레코드의 'system' 필드를 업데이트
 
@@ -19,8 +19,8 @@ def update_system_field(input_filepath: str, output_filepath: str, new_system_me
         return
 
     try:
-        backtrans_filepath="backtrans_task1_dataset"
-        backtrans_process_jsonl(input_filepath, backtrans_filepath)
+        backtrans_filepath="data/backtrans_task1_dataset.jsonl"
+        backtrans_process_jsonl(input_filepath, backtrans_filepath) #백트랜슬레이션
 
         with open(backtrans_filepath, 'r', encoding='utf-8') as infile:
             for line_num, line in enumerate(infile, 1):
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         print(f"테스트를 위한 샘플 데이터 파일 '{original_dataset_path}'이(가) 생성되었습니다.")
 
     # 함수 호출
-    update_system_field(original_dataset_path, new_dataset_path, new_system_prompt)
+    data_processing(original_dataset_path, new_dataset_path, new_system_prompt)
 
     # 수정된 파일 내용 확인 (선택 사항)
     print("\n--- 수정된 파일 내용 (처음 2줄) ---")
