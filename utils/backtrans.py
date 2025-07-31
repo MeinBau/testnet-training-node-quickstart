@@ -19,7 +19,7 @@ def back_translate(text: str, source: str, target: str) -> str:
         print(f"번역 오류 발생: {e}")
         return text
 
-def backtrans_process_jsonl(INPUT_FILE, OUTPUT_FILE, SOURCE_LANGUAGE='en', TARGET_LANGUAGE='hu', RATIO=0.1):
+def backtrans_process_jsonl(INPUT_FILE, OUTPUT_FILE, SOURCE_LANGUAGE='en', TARGET_LANGUAGE='hu', RATIO=0.5):
     """
     JSONL 파일을 읽고, 설정된 비율(RATIO)만큼 랜덤하게 선택된 라인의 데이터를
     백트랜슬레이션된 데이터로 교체하여 저장합니다.
