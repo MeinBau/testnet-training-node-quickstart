@@ -88,7 +88,6 @@ def train_lora(
         args=training_args,
         peft_config=lora_config,
         data_collator=SFTDataCollator(tokenizer, max_seq_length=context_length),
-        label_names=["labels"],
     )
 
     # Train model
