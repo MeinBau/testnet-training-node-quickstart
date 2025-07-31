@@ -19,11 +19,11 @@ gemma_template = {
 }
 
 model2template = {
-    "Qwen/Qwen2.5-7B-Instruct": "qwen_template",
-    "Qwen/Qwen2.5-3B-Instruct": "qwen_template",
-    "Qwen/Qwen1.5-0.5B": "qwen_template",
-    "Qwen/Qwen1.5-1.8B": "qwen_template",
-    "Qwen/Qwen1.5-7B": "qwen_template",
+    "Qwen/Qwen2.5-7B-Instruct": qwen_template,
+    "Qwen/Qwen2.5-3B-Instruct": qwen_template,
+    "Qwen/Qwen1.5-0.5B": qwen_template,
+    "Qwen/Qwen1.5-1.8B": qwen_template,
+    "Qwen/Qwen1.5-7B": qwen_template,
 }
 
 model2size = {
