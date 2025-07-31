@@ -74,7 +74,7 @@ def train_lora(
         file="data/financial_news_clean.txt",
         tokenizer=tokenizer,
         max_seq_length=context_length,
-        template=model2template[model_id],
+        # template=model2template[model_id],
     )
 
     # Define trainer
