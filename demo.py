@@ -118,7 +118,7 @@ if __name__ == "__main__":
         num_train_epochs=3,
         per_device_train_batch_size=2,
         gradient_accumulation_steps=2,
-        lora_rank=32,
+        lora_rank=8,
         lora_alpha=16,
         lora_dropout=0.05,
     )
