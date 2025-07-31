@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
 
     # Set model ID and context length
-    model_id = "Qwen/Qwen2.5-1.5B"
+    model_id = "Qwen/Qwen1.5-1.8B"
     context_length = 2048
 
     # best_params = tuner.run()
