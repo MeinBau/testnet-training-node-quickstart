@@ -43,7 +43,7 @@ if __name__ == "__main__":
     model_set=["Qwen/Qwen2.5-7B-Instruct"]
     training_args=LoraTrainingArguments(
         num_train_epochs=3,
-        per_device_train_batch_size=2,
+        per_device_train_batch_size=1,
         gradient_accumulation_steps=2,
         lora_rank=32,
         lora_alpha=16,
