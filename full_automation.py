@@ -87,12 +87,13 @@ if __name__ == "__main__":
             #     task_id, repo_name, model2base_model[model_id], gpu_type, commit_hash
             # )
             # logger.info("Task submitted successfully")
-            logger.info(f"Models within the max_params: {all_training_args.keys()}")
+            
         except Exception as e:
             logger.error(f"Error: {e}")
             logger.info("Proceed to the next model...")
         finally:
             # cleanup merged_model and output
+            logger.info(f"Models within the max_params: {all_training_args.keys()}")
             os.system("rm -rf merged_model")
             os.system("rm -rf outputs")
             continue
