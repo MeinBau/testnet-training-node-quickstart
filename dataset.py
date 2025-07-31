@@ -146,6 +146,7 @@ class TextDatasetProcessor:
     """
     Plain text file을 읽어와 토큰화하고, max_seq_length에 맞춰 처리하여
     생성 모델 학습에 적합한 형태로 데이터를 가공합니다.
+    SFTDataCollator와 호환되도록 "target_mask"를 포함하여 데이터를 반환합니다.
     """
     def __init__(self, tokenizer, max_seq_length: int, overlap_length: int = 0):
         self.tokenizer = tokenizer
@@ -154,9 +155,10 @@ class TextDatasetProcessor:
         if self.overlap_length >= self.max_seq_length:
             raise ValueError("Overlap length must be less than max_seq_length.")
 
-    def process_file(self, file_path: str):
+    def process_file(self, file_path: str) -> List[Dict[str, Any]]:
         """
         주어진 텍스트 파일을 읽어와 학습 샘플 리스트로 반환합니다.
+        각 샘플은 SFTDataCollator가 기대하는 "input_ids", "attention_mask", "target_mask"를 포함합니다.
         """
         processed_samples = []
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -165,7 +167,6 @@ class TextDatasetProcessor:
         # 전체 텍스트를 토큰화합니다.
         # 주의: 매우 긴 텍스트는 메모리 문제를 일으킬 수 있으므로, 대용량 파일은
         # 라인 단위로 읽는 것을 고려해야 합니다. 여기서는 편의상 전체 읽기.
-        # 실제 대규모 코퍼스에서는 TextDataset에서 라인 단위 처리가 더 효율적일 수 있습니다.
         tokenized_full_text = self.tokenizer(
             full_text,
             truncation=False, # 전체 텍스트를 토큰화하므로 truncation=False
@@ -178,26 +179,22 @@ class TextDatasetProcessor:
             chunk = tokenized_full_text[i : i + self.max_seq_length]
 
             # 청크가 너무 짧으면 건너뛰기 (선택 사항, 패딩으로 채울 수도 있음)
+            # SFTDataCollator에서 짧은 시퀀스는 패딩으로 채워지므로,
+            # 아주 짧은 시퀀스를 제외하려면 여기서 필터링할 수 있습니다.
             if len(chunk) < 50: # 최소 길이 설정
-                 continue
+                continue
 
             # 패딩 처리
-            input_ids = chunk
+            input_ids = list(chunk) # 텐서로 변환하기 전에 리스트로 명시적으로 복사
             attention_mask = [1] * len(input_ids)
+            # Causal LM의 경우, 모든 토큰이 레이블이 될 수 있으므로 target_mask를 모두 1로 설정합니다.
 
-            # max_seq_length까지 패딩
-            while len(input_ids) < self.max_seq_length:
-                input_ids.append(self.tokenizer.pad_token_id)
-                attention_mask.append(0)
-
-            input_ids = torch.tensor(input_ids, dtype=torch.long)
-            attention_mask = torch.tensor(attention_mask, dtype=torch.long)
-            labels = input_ids.clone() # Causal LM의 경우 labels는 input_ids와 동일
+            target_mask = [1] * len(input_ids)
 
             processed_samples.append({
                 "input_ids": input_ids,
                 "attention_mask": attention_mask,
-                "labels": labels,
+                "target_mask": target_mask, # SFTDataCollator가 이 키를 찾습니다.
             })
         return processed_samples
 
