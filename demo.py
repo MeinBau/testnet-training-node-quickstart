@@ -6,7 +6,6 @@ from peft import LoraConfig
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from trl import SFTTrainer, SFTConfig
 
-from utils.optuna_tuner import OptunaLoraTuner, OptunaConfig
 from dataset import SFTDataCollator, SFTDataset
 from utils.constants import model2template
 
@@ -19,7 +18,6 @@ class LoraTrainingArguments:
     lora_rank: int
     lora_alpha: int
     lora_dropout: int
-    learning_rate: float
 
 
 def train_lora(
@@ -113,29 +111,29 @@ def optuna_train_wrapper(params):
 if __name__ == "__main__":
     
     # Define training arguments for LoRA fine-tuning
-    # training_args = LoraTrainingArguments(
-    #     num_train_epochs=3,
-    #     per_device_train_batch_size=2,
-    #     gradient_accumulation_steps=2,
-    #     lora_rank=32,
-    #     lora_alpha=16,
-    #     lora_dropout=0.05,
-    # )
-    tuner = OptunaLoraTuner(
-        train_fn=optuna_train_wrapper,
-        eval_fn=None,
-        optuna_config=OptunaConfig(n_trials=10)
+    training_args = LoraTrainingArguments(
+        num_train_epochs=3,
+        per_device_train_batch_size=2,
+        gradient_accumulation_steps=2,
+        lora_rank=32,
+        lora_alpha=16,
+        lora_dropout=0.05,
     )
+    # tuner = OptunaLoraTuner(
+    #     train_fn=optuna_train_wrapper,
+    #     eval_fn=None,
+    #     optuna_config=OptunaConfig(n_trials=10)
+    # )
 
 
     # Set model ID and context length
-    model_id = "Qwen/Qwen2.5-1.5B-Instruct"
+    model_id = "Qwen/Qwen2.5-7B-Instruct"
     context_length = 2048
 
-    best_params = tuner.run()
-    print("Best LoRA Hyperparameters:", best_params)
+    # best_params = tuner.run()
+    # print("Best LoRA Hyperparameters:", best_params)
 
     # Start LoRA fine-tuning
-    # train_lora(     
-    #     model_id=model_id, context_length=context_length, training_args=training_args
-    # )
+    train_lora(     
+        model_id=model_id, context_length=context_length, training_args=training_args
+    )
