@@ -1,6 +1,8 @@
 import json
 import os
 
+from utils.backtrans import backtrans_process_jsonl
+
 def update_system_field(input_filepath: str, output_filepath: str, new_system_message: str):
     """
     각 레코드의 'system' 필드를 업데이트
@@ -17,7 +19,10 @@ def update_system_field(input_filepath: str, output_filepath: str, new_system_me
         return
 
     try:
-        with open(input_filepath, 'r', encoding='utf-8') as infile:
+        backtrans_filepath="backtrans_task1_dataset"
+        backtrans_process_jsonl(input_filepath, backtrans_filepath)
+
+        with open(backtrans_filepath, 'r', encoding='utf-8') as infile:
             for line_num, line in enumerate(infile, 1):
                 try:
                     data = json.loads(line.strip())

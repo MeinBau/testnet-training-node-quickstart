@@ -46,7 +46,7 @@ def train_lora(
         per_device_train_batch_size=training_args.per_device_train_batch_size,
         gradient_accumulation_steps=training_args.gradient_accumulation_steps,
         warmup_steps=100,
-        learning_rate=2e-4,
+        learning_rate=1.44e-4,
         bf16=True,
         logging_steps=20,
         output_dir="outputs",
@@ -95,17 +95,17 @@ def train_lora(
     # upload lora weights and tokenizer
     print("Training Completed.")
 
-def optuna_train_wrapper(params):
-    args = LoraTrainingArguments(
-        num_train_epochs=3  ,
-        per_device_train_batch_size=2,
-        gradient_accumulation_steps=2,
-        lora_rank=params["lora_rank"],
-        lora_alpha=params["lora_alpha"],
-        lora_dropout=params["lora_dropout"],
-        learning_rate=params["learning_rate"], #optuna 문제로 추가
-    )
-    return train_lora(model_id=model_id, context_length=context_length, training_args=args)
+# def optuna_train_wrapper(params):
+#     args = LoraTrainingArguments(
+#         num_train_epochs=3  ,
+#         per_device_train_batch_size=2,
+#         gradient_accumulation_steps=2,
+#         lora_rank=params["lora_rank"],
+#         lora_alpha=params["lora_alpha"],
+#         lora_dropout=params["lora_dropout"],
+#         learning_rate=params["learning_rate"], #optuna 문제로 추가
+#     )
+#     return train_lora(model_id=model_id, context_length=context_length, training_args=args)
 
 
 if __name__ == "__main__":
