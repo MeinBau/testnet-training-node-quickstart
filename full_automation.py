@@ -40,17 +40,19 @@ if __name__ == "__main__":
     #         f.write(chunk)
 
     # train all feasible models and merge
-    # model_set=["Qwen/Qwen2.5-7B-Instruct"]
-    # training_args=LoraTrainingArguments(
-    #     num_train_epochs=3,
-    #     per_device_train_batch_size=2,
-    #     gradient_accumulation_steps=2,
-    #     lora_rank=8,
-    #     lora_alpha=16,
-    #     lora_dropout=0.05,
-    # )
+
+    training_args=LoraTrainingArguments(
+        num_train_epochs=3,
+        per_device_train_batch_size=2,
+        gradient_accumulation_steps=2,
+        lora_rank=8,
+        lora_alpha=16,
+        lora_dropout=0.05,
+    )
     ban_model_id_set= ['Qwen/Qwen1.5-0.5B']
-    for model_id in all_training_args.keys():
+    model_id_set= ['Jun13KU/domain-Qwen-Qwen1.5-1.8B']
+
+    for model_id in model_id_set:
         logger.info(f"Start to train the model {model_id}...")
         if (model_id in ban_model_id_set) : continue
         # if OOM, proceed to the next model
@@ -58,7 +60,7 @@ if __name__ == "__main__":
             train_lora(
                 model_id=model_id,
                 context_length=context_length,
-                training_args=LoraTrainingArguments(**all_training_args[model_id]),
+                training_args=training_args,
             )
         except RuntimeError as e:
             logger.error(f"Error: {e}")
