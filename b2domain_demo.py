@@ -75,7 +75,7 @@ def train_lora(
 
     # Load dataset
     dataset = TextDataset(
-        file="data/financial_news_clean.txt",
+        file="data/financial_news.txt",
         tokenizer=tokenizer,
         max_seq_length=context_length,
         # template=model2template[model_id],
@@ -88,6 +88,7 @@ def train_lora(
         args=training_args,
         peft_config=lora_config,
         data_collator=SFTDataCollator(tokenizer, max_seq_length=context_length),
+        label_names=["labels"],
     )
 
     # Train model
