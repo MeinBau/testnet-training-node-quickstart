@@ -140,3 +140,78 @@ class SFTDataCollator(object):
             "labels": labels,
         }
         return inputs
+
+
+class TextDatasetProcessor:
+    """
+    Plain text file을 읽어와 토큰화하고, max_seq_length에 맞춰 처리하여
+    생성 모델 학습에 적합한 형태로 데이터를 가공합니다.
+    """
+    def __init__(self, tokenizer, max_seq_length: int, overlap_length: int = 0):
+        self.tokenizer = tokenizer
+        self.max_seq_length = max_seq_length
+        self.overlap_length = overlap_length # 오버랩 길이 추가 (선택 사항)
+        if self.overlap_length >= self.max_seq_length:
+            raise ValueError("Overlap length must be less than max_seq_length.")
+
+    def process_file(self, file_path: str):
+        """
+        주어진 텍스트 파일을 읽어와 학습 샘플 리스트로 반환합니다.
+        """
+        processed_samples = []
+        with open(file_path, 'r', encoding='utf-8') as f:
+            full_text = f.read() # 파일 전체를 하나의 긴 텍스트로 읽어옴
+
+        # 전체 텍스트를 토큰화합니다.
+        # 주의: 매우 긴 텍스트는 메모리 문제를 일으킬 수 있으므로, 대용량 파일은
+        # 라인 단위로 읽는 것을 고려해야 합니다. 여기서는 편의상 전체 읽기.
+        # 실제 대규모 코퍼스에서는 TextDataset에서 라인 단위 처리가 더 효율적일 수 있습니다.
+        tokenized_full_text = self.tokenizer(
+            full_text,
+            truncation=False, # 전체 텍스트를 토큰화하므로 truncation=False
+            return_attention_mask=False # 나중에 수동으로 생성
+        )["input_ids"]
+
+        # max_seq_length에 맞춰 슬라이딩 윈도우 방식으로 샘플 생성
+        # 긴 텍스트를 끊임없이 이어 붙이는 아이디어를 여기서 구현
+        for i in range(0, len(tokenized_full_text), self.max_seq_length - self.overlap_length):
+            chunk = tokenized_full_text[i : i + self.max_seq_length]
+
+            # 청크가 너무 짧으면 건너뛰기 (선택 사항, 패딩으로 채울 수도 있음)
+            if len(chunk) < 50: # 최소 길이 설정
+                 continue
+
+            # 패딩 처리
+            input_ids = chunk
+            attention_mask = [1] * len(input_ids)
+
+            # max_seq_length까지 패딩
+            while len(input_ids) < self.max_seq_length:
+                input_ids.append(self.tokenizer.pad_token_id)
+                attention_mask.append(0)
+
+            input_ids = torch.tensor(input_ids, dtype=torch.long)
+            attention_mask = torch.tensor(attention_mask, dtype=torch.long)
+            labels = input_ids.clone() # Causal LM의 경우 labels는 input_ids와 동일
+
+            processed_samples.append({
+                "input_ids": input_ids,
+                "attention_mask": attention_mask,
+                "labels": labels,
+            })
+        return processed_samples
+
+
+class TextDataset(Dataset):
+    """
+    TextDatasetProcessor를 사용하여 전처리된 데이터를 로드하는 Dataset 클래스.
+    """
+    def __init__(self, file: str, tokenizer, max_seq_length: int, overlap_length: int = 0):
+        self.processor = TextDatasetProcessor(tokenizer, max_seq_length, overlap_length)
+        self.data = self.processor.process_file(file)
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        return self.data[idx]
