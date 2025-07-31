@@ -30,7 +30,7 @@ if __name__ == "__main__":
     max_params = task["data"]["max_params"]
 
     # # filter out the model within the max_params
-    # model2size = {k: v for k, v in model2size.items() if v <= max_params}
+    model2size = {k: v for k, v in model2size.items() if v <= max_params}
     all_training_args = {k: v for k, v in all_training_args.items() if k in model2size}
     logger.info(f"Models within the max_params: {all_training_args.keys()}")
     # download in chunks
@@ -40,23 +40,23 @@ if __name__ == "__main__":
     #         f.write(chunk)
 
     # train all feasible models and merge
-    model_set=["Qwen/Qwen2.5-7B-Instruct"]
-    training_args=LoraTrainingArguments(
-        num_train_epochs=3,
-        per_device_train_batch_size=1,
-        gradient_accumulation_steps=2,
-        lora_rank=8,
-        lora_alpha=16,
-        lora_dropout=0.05,
-    )
-    for model_id in model_set:
+    # model_set=["Qwen/Qwen2.5-7B-Instruct"]
+    # training_args=LoraTrainingArguments(
+    #     num_train_epochs=3,
+    #     per_device_train_batch_size=2,
+    #     gradient_accumulation_steps=2,
+    #     lora_rank=8,
+    #     lora_alpha=16,
+    #     lora_dropout=0.05,
+    # )
+    for model_id in all_training_args.keys():
         logger.info(f"Start to train the model {model_id}...")
         # if OOM, proceed to the next model
         try:
             train_lora(
                 model_id=model_id,
                 context_length=context_length,
-                training_args=training_args,
+                training_args=LoraTrainingArguments(**all_training_args[model_id]),
             )
         except RuntimeError as e:
             logger.error(f"Error: {e}")
