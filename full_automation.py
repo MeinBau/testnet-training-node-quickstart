@@ -71,7 +71,7 @@ if __name__ == "__main__":
         try:
             logger.info("Start to push the lora weight to the hub...")
             api = HfApi(token=os.environ["HF_TOKEN"])
-            repo_name = f"{HF_USERNAME}/task-{task_id}-{model_id.replace('/', '-')}"
+            repo_name = f"{HF_USERNAME}/domain-{model_id.replace('/', '-')}"
             # check whether the repo exists
             try:
                 api.create_repo(
