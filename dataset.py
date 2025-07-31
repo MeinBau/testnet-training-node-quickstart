@@ -158,15 +158,13 @@ class TextDatasetProcessor:
     def process_file(self, file_path: str) -> List[Dict[str, Any]]:
         """
         주어진 텍스트 파일을 읽어와 학습 샘플 리스트로 반환합니다.
-        각 샘플은 SFTDataCollator가 기대하는 "input_ids", "attention_mask", "target_mask"를 포함합니다.
+        각 샘플은 SFTDataCollator가 기대하는 "input_ids", "attention_mask", "labels", "target_mask"를 포함합니다.
         """
         processed_samples = []
         with open(file_path, 'r', encoding='utf-8') as f:
             full_text = f.read() # 파일 전체를 하나의 긴 텍스트로 읽어옴
 
         # 전체 텍스트를 토큰화합니다.
-        # 주의: 매우 긴 텍스트는 메모리 문제를 일으킬 수 있으므로, 대용량 파일은
-        # 라인 단위로 읽는 것을 고려해야 합니다. 여기서는 편의상 전체 읽기.
         tokenized_full_text = self.tokenizer(
             full_text,
             truncation=False, # 전체 텍스트를 토큰화하므로 truncation=False
@@ -179,22 +177,26 @@ class TextDatasetProcessor:
             chunk = tokenized_full_text[i : i + self.max_seq_length]
 
             # 청크가 너무 짧으면 건너뛰기 (선택 사항, 패딩으로 채울 수도 있음)
-            # SFTDataCollator에서 짧은 시퀀스는 패딩으로 채워지므로,
-            # 아주 짧은 시퀀스를 제외하려면 여기서 필터링할 수 있습니다.
             if len(chunk) < 50: # 최소 길이 설정
                 continue
 
             # 패딩 처리
             input_ids = list(chunk) # 텐서로 변환하기 전에 리스트로 명시적으로 복사
             attention_mask = [1] * len(input_ids)
-            # Causal LM의 경우, 모든 토큰이 레이블이 될 수 있으므로 target_mask를 모두 1로 설정합니다.
 
+            # Causal LM의 경우, 'labels'는 일반적으로 'input_ids'와 동일합니다.
+            # 모델 내부에서 이를 시프트하여 다음 토큰 예측에 사용합니다.
+            labels = list(chunk) # input_ids와 동일하게 설정
+
+            # 'target_mask'는 손실 계산에 포함할 토큰을 지정합니다.
+            # Causal LM에서는 일반적으로 모든 토큰에 대해 손실을 계산합니다.
             target_mask = [1] * len(input_ids)
 
             processed_samples.append({
                 "input_ids": input_ids,
                 "attention_mask": attention_mask,
-                "target_mask": target_mask, # SFTDataCollator가 이 키를 찾습니다.
+                "labels": labels,          # 추가된 부분: 레이블 데이터
+                "target_mask": target_mask,
             })
         return processed_samples
 
