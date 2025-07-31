@@ -44,9 +44,9 @@ model2size = {
 }
 
 model2base_model = {
+    "Qwen/Qwen2.5-7B-Instruct": "qwen1.5",
+    "Qwen/Qwen2.5-3B-Instruct": "qwen1.5",
     "Qwen/Qwen1.5-0.5B": "qwen1.5",
     "Qwen/Qwen1.5-1.8B": "qwen1.5",
     "Qwen/Qwen1.5-7B": "qwen1.5",
-    "google/gemma-2b": "gemma",
-    "google/gemma-7b": "gemma",
 }
