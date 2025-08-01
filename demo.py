@@ -66,7 +66,6 @@ def train_lora(
         model_id,
         quantization_config=bnb_config,
         device_map={"": 0},
-        attn_implementation="eager",
         token=os.environ["HF_TOKEN"],
     )
 
@@ -132,7 +131,7 @@ if __name__ == "__main__":
 
     # Set model ID and context length
     model_id = "Qwen/Qwen2.5-1.5B"
-    context_length = 2048
+    context_length = 1536
 
     # best_params = tuner.run()
     # print("Best LoRA Hyperparameters:", best_params)

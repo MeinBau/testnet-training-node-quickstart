@@ -72,11 +72,9 @@ def train_lora(
         model_id,
         quantization_config=bnb_config,
         device_map={"": 0},
-        attn_implementation="eager",
         token=os.environ["HF_TOKEN"],
     )
-    model.config.sliding_window = None
-    
+
     # Load dataset
     # dataset = TextDataset(
     #     file="data/financial_news.txt",
