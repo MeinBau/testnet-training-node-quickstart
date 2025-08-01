@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # train all feasible models and merge
 
     training_args=LoraTrainingArguments(
-        num_train_epochs=3,
+        num_train_epochs=1,
         per_device_train_batch_size=1,
         gradient_accumulation_steps=2,
         lora_rank=16,
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         lora_dropout=0.05,
     )
     ban_model_id_set= ['Qwen/Qwen1.5-0.5B']
-    model_id_set= ['Qwen/Qwen2.5-7B-Instruct']
+    model_id_set= ['']
 
     for model_id in model_id_set:
         logger.info(f"Start to train the model {model_id}...")
@@ -96,9 +96,9 @@ if __name__ == "__main__":
             logger.info(f"Commit hash: {commit_hash}")
             logger.info(f"Repo name: {repo_name}")
             # submit
-            submit_task(
-                task_id, repo_name, "qwen1.5", gpu_type, commit_hash
-            )
+            # submit_task(
+            #     task_id, repo_name, "qwen1.5", gpu_type, commit_hash
+            # )
             # logger.info("Task submitted successfully")
             
         except Exception as e:
