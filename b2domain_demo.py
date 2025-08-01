@@ -134,7 +134,7 @@ if __name__ == "__main__":
     
     # Define training arguments for LoRA fine-tuning
     training_args = LoraTrainingArguments(
-        num_train_epochs=3,
+        num_train_epochs= 1,
         per_device_train_batch_size=4,
         gradient_accumulation_steps=2,
         lora_rank=16,
