@@ -56,6 +56,7 @@ def train_lora(
         logging_steps=20,
         output_dir="outputs",
         optim="paged_adamw_8bit",
+        dataset_text_field="text",
         remove_unused_columns=False,
         num_train_epochs=training_args.num_train_epochs,
         max_seq_length=context_length,
@@ -100,7 +101,6 @@ def train_lora(
         model=model,
         train_dataset=tokenized_dataset,
         args=training_args,
-        dataset_text_field="text",
         peft_config=lora_config,
         # data_collator=SFTDataCollator(tokenizer, max_seq_length=context_length),
     )
