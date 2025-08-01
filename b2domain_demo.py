@@ -7,6 +7,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from trl import SFTTrainer, SFTConfig
 from loguru import logger
 from huggingface_hub import HfApi
+from datasets import load_dataset
 
 from dataset import TextDataset, SFTDataCollator
 from utils.constants import model2template
@@ -74,18 +75,20 @@ def train_lora(
     )
 
     # Load dataset
-    dataset = TextDataset(
-        file="data/financial_news.txt",
-        tokenizer=tokenizer,
-        max_seq_length=context_length,
-        # template=model2template[model_id],
-    )
+    # dataset = TextDataset(
+    #     file="data/financial_news.txt",
+    #     tokenizer=tokenizer,
+    #     max_seq_length=context_length,
+    #     # template=model2template[model_id],
+    # )
+    dataset=load_dataset("json", data_files="data/financial_news.json")
 
     # Define trainer
     trainer = SFTTrainer(
         model=model,
         train_dataset=dataset,
         args=training_args,
+        dataset_text_field="text",
         peft_config=lora_config,
         data_collator=SFTDataCollator(tokenizer, max_seq_length=context_length),
     )
