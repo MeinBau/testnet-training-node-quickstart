@@ -81,12 +81,12 @@ def train_lora(
     #     max_seq_length=context_length,
     #     # template=model2template[model_id],
     # )
-    dataset=load_dataset("json", data_files="data/financial_news.json")
-
+    dataset=load_dataset("json", data_files="data/financial_news.jsonl")
+    train_dataset = dataset["train"]
     # Define trainer
     trainer = SFTTrainer(
         model=model,
-        train_dataset=dataset,
+        train_dataset=train_dataset,
         args=training_args,
         dataset_text_field="text",
         peft_config=lora_config,
