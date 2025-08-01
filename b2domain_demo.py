@@ -123,7 +123,7 @@ if __name__ == "__main__":
         per_device_train_batch_size=1,
         gradient_accumulation_steps=2,
         lora_rank=4,
-        lora_alpha=16,
+        lora_alpha=8,
         lora_dropout=0.05,
     )
     # tuner = OptunaLoraTuner(
