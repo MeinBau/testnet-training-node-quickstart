@@ -66,12 +66,13 @@ def train_lora(
         model_id,
         quantization_config=bnb_config,
         device_map={"": 0},
+        attn_implementation="eager",
         token=os.environ["HF_TOKEN"],
     )
 
     # Load dataset
     dataset = SFTDataset(
-        file="data/temp.jsonl",
+        file="data/processed_task1_dataset.jsonl",
         tokenizer=tokenizer,
         max_seq_length=context_length,
         template=model2template[model_id],
