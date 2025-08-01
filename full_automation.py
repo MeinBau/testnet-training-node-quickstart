@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # train all feasible models and merge
 
     training_args=LoraTrainingArguments(
-        num_train_epochs=2,
+        num_train_epochs=3,
         per_device_train_batch_size=1,
         gradient_accumulation_steps=2,
         lora_rank=16,
