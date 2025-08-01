@@ -122,8 +122,8 @@ if __name__ == "__main__":
         num_train_epochs=3,
         per_device_train_batch_size=1,
         gradient_accumulation_steps=2,
-        lora_rank=4,
-        lora_alpha=8,
+        lora_rank=8,
+        lora_alpha=16,
         lora_dropout=0.05,
     )
     # tuner = OptunaLoraTuner(
@@ -135,7 +135,7 @@ if __name__ == "__main__":
 
     # Set model ID and context length
     model_id = "Qwen/Qwen2.5-7B-Instruct"
-    context_length = 2048
+    context_length = 1024
 
     # best_params = tuner.run()
     # print("Best LoRA Hyperparameters:", best_params)
