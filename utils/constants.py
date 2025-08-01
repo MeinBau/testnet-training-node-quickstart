@@ -20,6 +20,7 @@ gemma_template = {
 
 model2template = {
     "Jun13KU/domain-Qwen-Qwen1.5-1.8B": qwen_template,
+    "Jun13KU/domain-Qwen-Qwen2.5-7B-Instruct": qwen_template,
     "Qwen/Qwen2.5-7B-Instruct": qwen_template,
     "Qwen/Qwen2.5-3B-Instruct": qwen_template,
     "Qwen/Qwen2.5-1.5B" : qwen_template,
