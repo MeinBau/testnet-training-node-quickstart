@@ -136,7 +136,7 @@ if __name__ == "__main__":
     # Define training arguments for LoRA fine-tuning
     training_args = LoraTrainingArguments(
         num_train_epochs=3,
-        per_device_train_batch_size=2,
+        per_device_train_batch_size=4,
         gradient_accumulation_steps=2,
         lora_rank=16,
         lora_alpha=32,
@@ -151,7 +151,7 @@ if __name__ == "__main__":
 
     # Set model ID and context length
     model_id = "Qwen/Qwen2.5-7B-Instruct"
-    context_length = 512
+    context_length = 256
 
     # best_params = tuner.run()
     # print("Best LoRA Hyperparameters:", best_params)
