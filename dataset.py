@@ -171,25 +171,28 @@ class TextDatasetProcessor:
                 chunk = token_buffer[:self.max_seq_length]
                 token_buffer = token_buffer[self.max_seq_length - self.overlap_length:]
 
-                chunk_tensor = torch.tensor(chunk, dtype=torch.long)
-                attention_mask = torch.ones_like(chunk_tensor)
-                target_mask = torch.ones_like(chunk_tensor)
+                # chunk_tensor = torch.tensor(chunk, dtype=torch.long)
+                # attention_mask = torch.ones_like(chunk_tensor)
+                # target_mask = torch.ones_like(chunk_tensor)
+                chunk_list = chunk    # 이미 list이므로 별도 변환 불필요
+                attention_mask_list = [1] * len(chunk_list)
+                target_mask_list = [1] * len(chunk_list)
 
                 samples.append({
-                    "input_ids": chunk_tensor,
-                    "attention_mask": attention_mask,
-                    "target_mask": target_mask
+                    "input_ids": chunk_list,
+                    "attention_mask": attention_mask_list,
+                    "target_mask": target_mask_list,
                 })
 
         # 남은 토큰 처리
         if token_buffer:
-            chunk_tensor = torch.tensor(token_buffer, dtype=torch.long)
-            attention_mask = torch.ones_like(chunk_tensor)
-            target_mask = torch.ones_like(chunk_tensor)
+            chunk_list = chunk    # 이미 list이므로 별도 변환 불필요
+            attention_mask_list = [1] * len(chunk_list)
+            target_mask_list = [1] * len(chunk_list)
             samples.append({
-                "input_ids": chunk_tensor,
-                "attention_mask": attention_mask,
-                "target_mask": target_mask
+                "input_ids": chunk_list,
+                "attention_mask": attention_mask_list,
+                "target_mask": target_mask_list,
             })
 
         return samples
