@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 import torch
 from peft import LoraConfig
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, DataCollatorForLanguageModeling
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from trl import SFTTrainer, SFTConfig
 from loguru import logger
 from huggingface_hub import HfApi
@@ -84,22 +84,25 @@ def train_lora(
     dataset = load_dataset("json", data_files={"train": "data/financial_news.jsonl"})
     train_dataset = dataset["train"]
     
-    data_collator = DataCollatorForLanguageModeling(
-        tokenizer=tokenizer,
-        mlm=False,
-        pad_to_multiple_of=8  # 선택사항
-    )
+    def tokenize_function(examples):
+        return tokenizer(
+            examples["text"],
+            padding="max_length",
+            truncation=True,
+            max_length=context_length,
+        )
+
+    tokenized_dataset = train_dataset.map(tokenize_function, batched=True, remove_columns=["text"])
+    
 
     # Define trainer
     trainer = SFTTrainer(
         model=model,
-        train_dataset=train_dataset,
+        train_dataset=tokenized_dataset,
         args=training_args,
         dataset_text_field="text",
         peft_config=lora_config,
         # data_collator=SFTDataCollator(tokenizer, max_seq_length=context_length),
-        data_collator=data_collator,
-
     )
 
     # Train model
