@@ -50,7 +50,7 @@ if __name__ == "__main__":
         lora_dropout=0.05,
     )
     ban_model_id_set= ['Qwen/Qwen1.5-0.5B']
-    model_id_set= ['Jun13KU/domain-Qwen-Qwen2.5-7B-Instruct']
+    model_id_set= ['Qwen/Qwen2.5-7B-Instruct']
 
     for model_id in model_id_set:
         logger.info(f"Start to train the model {model_id}...")
