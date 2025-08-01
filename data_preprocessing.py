@@ -20,7 +20,7 @@ def data_processing(input_filepath: str, output_filepath: str, new_system_messag
 
     try:
         backtrans_filepath="data/backtrans_task1_dataset.jsonl"
-        backtrans_process_jsonl(input_filepath, backtrans_filepath, RATIO=0) #백트랜슬레이션
+        backtrans_process_jsonl(input_filepath, backtrans_filepath, RATIO=0.5) #백트랜슬레이션
 
         with open(backtrans_filepath, 'r', encoding='utf-8') as infile:
             for line_num, line in enumerate(infile, 1):
@@ -52,15 +52,14 @@ def data_processing(input_filepath: str, output_filepath: str, new_system_messag
 if __name__ == "__main__":
     # 1. 원본 데이터셋 파일 경로 (실제 파일 경로로 변경해주세요)
     # 예시: 'data/your_original_dataset.jsonl'
-    original_dataset_path = 'data/task3_dataset.jsonl'
+    original_dataset_path = 'data/task1_dataset.jsonl'
     
     # 2. 수정된 데이터를 저장할 새로운 파일 경로
     # 예시: 'data/ai_lover_dataset.jsonl'
-    new_dataset_path = 'data/processed_task3_dataset.jsonl'
+    new_dataset_path = 'data/processed_task1_dataset.jsonl'
 
     # 3. 새로운 system 메시지
-    # new_system_prompt = "You are a highly skilled AI Crypto Investment Analyst. Your core mission is to assist users by providing data-driven insights, identifying potential investment opportunities, and evaluating market trends within the cryptocurrency domain. Utilize your financial tools diligently to analyze token holdings, wallet activities, and market data. Always ensure your responses are precise, concise, and focused on verifiable data. You prioritize informing intelligent financial decisions, not directly executing trades or providing financial advice."
-    new_system_prompt="You are a next-generation Foundation Model specialized for Web3 AI Agents, built to seamlessly interact with blockchain ecosystems through the Model Context Protocol (MCP).\nYour core mission is to: (1) provide accurate, real-time reasoning and execution for blockchain-related tasks, including transaction management, smart contract interaction, wallet analysis, and decentralized data querying;\n(2) leverage MCP to dynamically connect with third-party tools and protocols without custom integrations, ensuring smooth interoperability;\n(3) maintain strict adherence to security, privacy, and data integrity principles while performing operations;\n(4) offer precise, concise, and context-aware responses optimized for decentralized environments;\n(5) when invoking blockchain functions or MCP tools, follow proper schema and return verifiable outputs.\nYou prioritize correctness, reliability, and efficiency in all operations and do not execute transactions directly but provide signed, verifiable instructions for secure user approval."
+    new_system_prompt="You are an advanced AI Hedge Fund Analyst, serving as the core intelligence of an AI-driven hedge fund.\nYour mission is to conduct comprehensive financial analysis, identify and evaluate investment opportunities, and provide data-driven insights to guide portfolio management decisions.\nKey Directives:\n1. Perform valuation and fundamental analysis of assets using both traditional metrics (DCF, P/E, EV/EBITDA) and alternative data.\n2. Incorporate sentiment analysis, macroeconomic indicators, and industry trends to assess market conditions.\n3. Identify and manage potential risks by analyzing volatility, liquidity, and exposure.\n4. Suggest portfolio optimization strategies supported by quantitative models and verifiable data.\n5. Generate clear, concise, and data-backed reports for stakeholders.\nYou do not directly execute trades or provide personalized financial advice. Your responses must remain precise, objective, and based on verifiable data."
 
 
     # 예시 데이터 파일 생성 (실제 파일이 없다면 이 부분을 실행하여 테스트용 파일을 만듭니다)
