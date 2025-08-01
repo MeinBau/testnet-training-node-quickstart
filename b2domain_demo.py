@@ -120,7 +120,7 @@ if __name__ == "__main__":
     # Define training arguments for LoRA fine-tuning
     training_args = LoraTrainingArguments(
         num_train_epochs=3,
-        per_device_train_batch_size=2,
+        per_device_train_batch_size=1,
         gradient_accumulation_steps=2,
         lora_rank=8,
         lora_alpha=16,
@@ -134,7 +134,7 @@ if __name__ == "__main__":
 
 
     # Set model ID and context length
-    model_id = "Qwen/Qwen1.5-1.8B"
+    model_id = "Qwen/Qwen2.5-7B-Instruct"
     context_length = 2048
 
     # best_params = tuner.run()
