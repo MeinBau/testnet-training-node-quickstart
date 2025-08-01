@@ -75,7 +75,8 @@ def train_lora(
         attn_implementation="eager",
         token=os.environ["HF_TOKEN"],
     )
-
+    model.config.sliding_window = None
+    
     # Load dataset
     # dataset = TextDataset(
     #     file="data/financial_news.txt",
