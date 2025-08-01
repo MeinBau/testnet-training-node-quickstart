@@ -90,6 +90,8 @@ def train_lora(
         args=training_args,
         dataset_text_field="text",
         peft_config=lora_config,
+        padding=True,
+        truncation=True,
         # data_collator=SFTDataCollator(tokenizer, max_seq_length=context_length),
     )
 
