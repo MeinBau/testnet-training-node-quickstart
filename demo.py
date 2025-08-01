@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
     # Set model ID and context length
     model_id = "Qwen/Qwen2.5-1.5B"
-    context_length = 1536
+    context_length = 2048
 
     # best_params = tuner.run()
     # print("Best LoRA Hyperparameters:", best_params)

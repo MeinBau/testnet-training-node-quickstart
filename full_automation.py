@@ -45,8 +45,8 @@ if __name__ == "__main__":
         num_train_epochs=2,
         per_device_train_batch_size=1,
         gradient_accumulation_steps=2,
-        lora_rank=8,
-        lora_alpha=16,
+        lora_rank=16,
+        lora_alpha=32,
         lora_dropout=0.05,
     )
     ban_model_id_set= ['Qwen/Qwen1.5-0.5B']
