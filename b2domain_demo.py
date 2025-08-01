@@ -90,7 +90,7 @@ def train_lora(
         args=training_args,
         dataset_text_field="text",
         peft_config=lora_config,
-        data_collator=SFTDataCollator(tokenizer, max_seq_length=context_length),
+        # data_collator=SFTDataCollator(tokenizer, max_seq_length=context_length),
     )
 
     # Train model
