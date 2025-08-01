@@ -71,7 +71,7 @@ def train_lora(
 
     # Load dataset
     dataset = SFTDataset(
-        file="data/processed_task1_dataset.jsonl",
+        file="data/processed_task3_dataset.jsonl",
         tokenizer=tokenizer,
         max_seq_length=context_length,
         template=model2template[model_id],
